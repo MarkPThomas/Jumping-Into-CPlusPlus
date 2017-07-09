@@ -1,3 +1,0 @@
-C:/Users/Mark/Documents/GitHub/CPlusPlus/Jumping-Into-CPlusPlus/Part 1 - Jumping Into C++/Ch 2 - Basics/Practice Problems/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-C:/Users/Mark/Documents/GitHub/CPlusPlus/Jumping-Into-CPlusPlus/Part 1 - Jumping Into C++/Ch 2 - Basics/Practice Problems/cmake-build-debug/CMakeFiles/Practice_Problems.dir
-C:/Users/Mark/Documents/GitHub/CPlusPlus/Jumping-Into-CPlusPlus/Part 1 - Jumping Into C++/Ch 2 - Basics/Practice Problems/cmake-build-debug/CMakeFiles/edit_cache.dir
