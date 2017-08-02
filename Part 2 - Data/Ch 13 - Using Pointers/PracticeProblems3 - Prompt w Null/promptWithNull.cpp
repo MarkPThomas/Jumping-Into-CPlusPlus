@@ -28,9 +28,11 @@ void getNameByReference(string& firstName, string& lastName)
 	cout << "Please enter your first name: ";
 	cin >> firstName;
 
-	// Cannot check for null, so this must always be called
-	cout << "Please enter your last name: ";
-	cin >> lastName;
+	if (lastName.empty()) // can also be 'if(lastName == nullptr)
+	{
+		cout << "Please enter your last name: ";
+		cin >> lastName;
+	}
 }
 
 int main()
@@ -80,4 +82,14 @@ int main()
 
 	getNameByReference(firstName3, lastName3);
 	cout << "Your name is " << firstName3 << " " << lastName3 << '\n';
+	cout << '\n';
+
+	// The following will compile but results in a runtime error.
+	// Null values cannot be passed into a reference parameter
+	/*cout << "Calling reference method with variable and null pointer... \n";
+	string firstName4;
+	string lastName4 = nullptr;
+
+	getNameByReference(firstName4, lastName4);
+	cout << "Your name is " << firstName4 << " " << lastName4 << '\n';*/
 }

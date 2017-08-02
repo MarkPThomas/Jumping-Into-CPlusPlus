@@ -5,6 +5,8 @@ using namespace std;
 
 int main()
 {
+  // See: http://www.cplusplus.com/doc/tutorial/pointers/
+  
 	int number = 50;
 	int* numberAddress = &number;
 	int numberValue = number;
