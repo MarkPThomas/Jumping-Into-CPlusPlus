@@ -1,0 +1,294 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// Write a recursive algorithm to solve the Tower of Hanoi problem:
+//
+// The Tower of Hanoi is a mathematical game or puzzle. 
+// It consists of three rods and a number of disks of different sizes, which can slide onto any rod. 
+// The puzzle starts with the disks in a neat stack in ascending order of size on one rod, the smallest at the top, thus making a conical shape.
+//
+// The objective of the puzzle is to move the entire stack to another rod, obeying the following simple rules:
+//
+// 1. Only one disk can be moved at a time.
+// 2. Each move consists of taking the upper disk from one of the stacks and placing it on top of another stack.
+// 3. No disk may be placed on top of a smaller disk.
+// 
+// With 3 disks, the puzzle can be solved in 7 moves.
+// The minimal number of moves required to solve a Tower of Hanoi puzzle is 2n - 1, where n is the number of disks.
+//
+// See: https://en.wikipedia.org/wiki/Tower_of_Hanoi
+
+struct Disc
+{
+	int size = 0;
+	Disc* next = nullptr;
+	Disc* previous = nullptr;
+};
+
+Disc* removeSmallestDisk(Disc* p_list);
+Disc* getSmallestDisk(Disc* p_list);
+Disc* getDiskBySize(Disc* p_list, int size);
+int getSmallestDiskSize(Disc* p_list);
+
+Disc* addNewToLinkedList(Disc* p_list, int size);
+Disc* addToLinkedListBeginning(Disc* head, Disc* node);
+Disc* addToLinkedListEnd(Disc* head, Disc* node);
+Disc* removeFromLinkedList(Disc* p_list, Disc* p_item);
+
+struct Discs
+{
+	Disc* head = nullptr;
+
+	Disc* pop() 
+	{
+		Disc* smallestDisk = getSmallestDisk(head);
+		head = removeFromLinkedList(head, smallestDisk);
+		return smallestDisk;
+	}
+
+	void push(Disc* disc)
+	{
+		head = addToLinkedListBeginning(head, disc);
+	}
+};
+
+Discs* generatePegA(int size);
+void moveDisc(int discSize, Discs* source, Discs* target, Discs* auxiliary);
+
+void printList(Discs* p_list);
+void printAllLists(Discs* pegA, Discs* pegB, Discs* pegC);
+
+Discs* pegA;
+Discs* pegB;
+Discs* pegC;
+int iteration = 0;
+
+int main()
+{
+	const int minDiscSize = 2;
+	int maxDiscSize = minDiscSize;
+	do
+	{
+		cout << "A column of disks of descending size starting from 1 to n will be generated.\n";
+		cout << "Please enter the maximum disk size: ";
+		cin >> maxDiscSize;
+	} while (maxDiscSize < minDiscSize);
+
+	// Make 3 linked lists that can hold the disks, with 'A' holding the complete set of disks
+	pegA = generatePegA(maxDiscSize);
+	pegB = new Discs;
+	pegC = new Discs;
+
+	printAllLists(pegA, pegB, pegC);
+
+	cout << '\n';
+	cout << "Solving the Tower of Hanoi Problem using recursion...\n\n";
+	moveDisc(maxDiscSize, pegA, pegC, pegB);
+
+	delete pegA;
+	delete pegB;
+	delete pegC;
+}
+
+Discs* generatePegA(int size)
+{
+	Disc* p_items = nullptr;
+	for (int i = 1; i <= size; i++)
+	{
+		p_items = addNewToLinkedList(p_items, i);
+	}
+	
+	Discs* pegA = new Discs;
+	pegA->head = p_items;
+	return pegA;
+}
+
+void moveDisc(int discSize, Discs* source, Discs* target, Discs* auxiliary)
+{
+	if (discSize > 0)
+	{
+		// move n - 1 disks from source to auxiliary, so they are out of the way
+		moveDisc(discSize - 1, source, auxiliary, target);
+
+		// move the nth disk from source to target
+		target->push(source->pop());
+
+		// Display our progress
+		cout << "Iteration " << ++iteration;
+		printAllLists(pegA, pegB, pegC);
+
+		// move the n - 1 disks that we left on auxiliary onto target
+		moveDisc(discSize - 1, auxiliary, target, source);
+	}
+}
+
+Disc* removeSmallestDisk(Disc* p_list)
+{
+	Disc* smallestDisk = getSmallestDisk(p_list);
+	return removeFromLinkedList(p_list, smallestDisk);
+}
+
+Disc* getSmallestDisk(Disc* p_list)
+{
+	return getDiskBySize(p_list, getSmallestDiskSize(p_list));
+}
+
+Disc* getDiskBySize(Disc* p_list, int size)
+{
+	Disc* p_current = p_list;
+	while (p_current != nullptr)
+	{
+		if (p_current->size == size)
+		{
+			return p_current;
+		}
+		p_current = p_current->next;
+	}
+	return nullptr;
+}
+
+int getSmallestDiskSize(Disc* p_list)
+{
+	Disc* p_current = p_list;
+
+	// Determine the minimum size in the list
+	int minSize = p_current->size;
+	while (p_current != nullptr)
+	{
+		if (p_current->size < minSize)
+		{
+			minSize = p_current->size;
+		}
+		p_current = p_current->next;
+	}
+	return minSize;
+}
+
+
+
+Disc* addNewToLinkedList(Disc* p_list, int size)
+{
+	Disc* p_item = new Disc;
+	p_item->size = size;
+
+	return addToLinkedListEnd(p_list, p_item);
+}
+
+Disc* addToLinkedListEnd(Disc* head, Disc* node)
+{
+	node->previous = head;
+	node->next = nullptr;
+	if (!head)
+	{
+		head = node;
+	}
+	else
+	{
+		Disc *temp = head;
+		
+		// Get last node in list to insert new node at the end
+		while (temp->next) 
+		{
+			temp = temp->next;
+		}
+
+		// Appends the last node with last
+		temp->next = node;
+	}
+
+	return head;
+}
+
+Disc* addToLinkedListBeginning(Disc* head, Disc* node)
+{
+	node->previous = nullptr;
+	node->next = head;
+	if (!head)
+	{
+		head = node;
+	}
+	else
+	{
+		Disc *temp = head;
+		node->next = temp;
+		head = node;
+	}
+
+	return head;
+}
+
+Disc* removeFromLinkedList(Disc* p_list, Disc* p_item)
+{
+	Disc* p_nextItem = p_item->next;
+	Disc* p_previousItem = p_item->previous;
+	p_item->next = nullptr;
+	p_item->previous = nullptr;
+
+	if (!p_nextItem && !p_previousItem)
+	{// Only element in the list
+		return nullptr;
+	}
+
+	if (!p_previousItem && p_nextItem)
+	{// First element in the list
+		p_nextItem->previous = nullptr;
+		return p_nextItem;
+	}
+
+	if (p_previousItem && !p_nextItem)
+	{ // Last element in the list
+		p_previousItem->next = nullptr;
+	}
+	else if (p_previousItem && p_nextItem)
+	{ // Middle element in the list
+		p_previousItem->next = p_nextItem;
+		p_nextItem->previous = p_previousItem;
+	}
+
+	// Rewind to the head to return
+	while (p_previousItem->previous)
+	{
+		p_previousItem = p_previousItem->previous;
+	}
+
+	return p_previousItem;
+}
+
+
+
+
+void printAllLists(Discs* pegA, Discs* pegB, Discs* pegC)
+{
+	cout << '\n';
+	cout << "Peg A:\n";
+	printList(pegA);
+	cout << '\n';
+
+	cout << "Peg B:\n";
+	printList(pegB);
+	cout << '\n';
+
+	cout << "Peg C:\n";
+	printList(pegC);
+	cout << '\n';
+}
+
+void printList(Discs* p_list)
+{
+	if (!p_list || !p_list->head)
+	{
+		cout << "Disk peg is empty...\n";
+		return;
+	}
+
+	// Traverse the list to print the list
+	Disc* p_current = p_list->head;
+	while (p_current)
+	{
+		cout << "Disk Size: " << p_current->size << '\n';
+		p_current = p_current->next;
+	}
+	cout << '\n';
+}
