@@ -1,0 +1,4 @@
+1. c
+2. d (Option 'a' is valid because the parameter is not a reference or a pointer)
+3. c
+4. c
