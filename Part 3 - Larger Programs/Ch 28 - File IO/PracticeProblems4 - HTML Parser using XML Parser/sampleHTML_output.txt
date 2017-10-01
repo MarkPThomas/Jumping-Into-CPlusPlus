@@ -1,0 +1,15 @@
+  <head>
+  </head>
+  <body>
+	This is an html text file that is parsed to handle text such as *bold text*, _italic text_, and even hyperlink text(www.google.com).  
+  Even new lines.  
+    * first item
+    * second item
+
+    1. first item
+    2. second item
+  Blah blah blah.  
+    1. first item
+    2. second item
+
+  </body>
